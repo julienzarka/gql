@@ -19,7 +19,7 @@ dependencies:
   gql_exec:
     git:
       url: git://github.com/julienzarka/gql.git
-      path: gql/links/gql_exec
+      path: links/gql_exec
 dev_dependencies: 
   gql_pedantic:
     git:

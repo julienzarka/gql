@@ -6,7 +6,10 @@ environment:
   sdk: '>=2.7.2 <3.0.0'
 dependencies: 
   analyzer: ^0.39.14
-  gql: ^0.12.4
+  gql:
+    git:
+      url: git://github.com/julienzarka/gql.git
+      path: gql
   path: ^1.6.4
   glob: ^1.2.0
   build: ^1.0.0
