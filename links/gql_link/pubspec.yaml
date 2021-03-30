@@ -6,9 +6,18 @@ environment:
   sdk: '>=2.7.2 <3.0.0'
 dependencies: 
   meta: ^1.1.7
-  gql: ^0.12.3
-  gql_exec: ^0.2.5
+  gql:
+    git:
+      url: git://github.com/julienzarka/gql.git
+      path: gql
+  gql_exec:
+    git:
+      url: git://github.com/julienzarka/gql.git
+      path: links/gql_exec
 dev_dependencies: 
   test: ^1.0.0
   mockito: ^4.1.1
-  gql_pedantic: ^1.0.2
+  gql_pedantic:
+    git:
+      url: git://github.com/julienzarka/gql.git
+      path: gql_pedantic
