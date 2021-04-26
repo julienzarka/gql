@@ -14,8 +14,8 @@ dependencies:
       url: git://github.com/julienzarka/gql.git
       path: links/gql_link
 dev_dependencies: 
-  test: ^1.0.0
-  mockito: ^4.1.1
+  test: ^1.16.5
+  mockito: ^4.1.4
   gql:
     git:
       url: git://github.com/julienzarka/gql.git
