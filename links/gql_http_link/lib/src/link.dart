@@ -189,6 +189,11 @@ class HttpLink extends Link {
       ...contextHeaders,
     };
 
+    final isAbsinthe = headers.containsKey("Server-type") && headers["Server-type"] == "Absinthe";
+    if (isAbsinthe) {
+      headers.remove("Server-type");
+    }
+
     final fileMap = extractFlattenedFileMap(body);
 
     final useGetForThisRequest =
@@ -206,12 +211,47 @@ class HttpLink extends Link {
       )..headers.addAll(headers);
     }
 
+    if (fileMap.isNotEmpty && isAbsinthe) {
+      final dynamic variables = body["variables"];
+      String httpVariables;
+      if (variables != null && variables is Map<String, dynamic>) {
+        httpVariables = _encodeAttempter(
+          request,
+          (Map body) => json.encode(
+            body,
+            toEncodable: (dynamic object) => (object is http.MultipartFile) ? object.field : object.toJson(),
+          ),
+        )(variables);
+      }
+
+      final dynamic bodyQuery = body["query"];
+      String httpBody;
+      if (bodyQuery != null && bodyQuery is Map<String, String>) {
+        httpBody = _encodeAttempter(
+          request,
+          (Map body) => json.encode(
+            body,
+            toEncodable: (dynamic object) => (object is http.MultipartFile) ? object.field : object.toJson(),
+          ),
+        )(body);
+      } else if (bodyQuery is String) {
+        httpBody = bodyQuery;
+      } else {
+        throw "Incompatible request for Absinthe";
+      }
+
+      return http.MultipartRequest("POST", uri)
+        ..queryAbsinthe = httpBody
+        ..variableAbsinthe = httpVariables
+        ..addAllFilesAbsinthe(fileMap)
+        ..headers.addAll(headers);
+    }
+
     final httpBody = _encodeAttempter(
       request,
       (Map body) => json.encode(
         body,
-        toEncodable: (dynamic object) =>
-            (object is http.MultipartFile) ? null : object.toJson(),
+        toEncodable: (dynamic object) => (object is http.MultipartFile) ? object.field : object.toJson(),
       ),
     )(body);
 

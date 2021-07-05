@@ -72,6 +72,37 @@ Map<String, MultipartFile> extractFlattenedFileMap(
   return currentMap;
 }
 
+/// According Elixir Absinthe specs https://hexdocs.pm/absinthe/file-uploads.html
+extension AddAllFilesAbsinthe on MultipartRequest {
+  void addAllFilesAbsinthe(Map<String, MultipartFile> fileMap) {
+    final List<MultipartFile> fileList = <MultipartFile>[];
+
+    final List<MapEntry<String, MultipartFile>> fileMapEntries = fileMap.entries.toList(growable: false);
+
+    for (int i = 0; i < fileMapEntries.length; i++) {
+      final MapEntry<String, MultipartFile> entry = fileMapEntries[i];
+      final MultipartFile f = entry.value;
+      fileList.add(MultipartFile(
+        f.field,
+        f.finalize(),
+        f.length,
+        contentType: f.contentType,
+        filename: f.filename,
+      ));
+    }
+    files.addAll(fileList);
+  }
+
+  set variableAbsinthe(String variables) {
+    if (variables != null) {
+      fields["variables"] = variables;
+    }
+  }
+
+  set queryAbsinthe(String body) => fields["query"] = body;
+}
+
+/// According Apollo specs https://github.com/jaydenseric/graphql-multipart-request-spec
 extension AddAllFiles on MultipartRequest {
   void addAllFiles(Map<String, MultipartFile> fileMap) {
     final Map<String, List<String>> fileMapping = <String, List<String>>{};
