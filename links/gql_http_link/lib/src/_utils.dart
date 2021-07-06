@@ -93,7 +93,7 @@ extension AddAllFilesAbsinthe on MultipartRequest {
     files.addAll(fileList);
   }
 
-  set variableAbsinthe(String variables) {
+  set variableAbsinthe(String? variables) {
     if (variables != null) {
       fields["variables"] = variables;
     }
